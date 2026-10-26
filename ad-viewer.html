@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AD Fast Viewer — Быстрый просмотр Active Directory</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-light: #f8fafc;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --accent: #10b981;
+            --text-main: #1e293b;
+            --text-light: #94a3b8;
+            --white: #ffffff;
+            --border: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg-light); color: var(--text-main); line-height: 1.6; }
+
+        /* --- Header --- */
+        header { background: var(--white); border-bottom: 1px solid var(--border); padding: 16px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .logo { font-weight: 800; font-size: 20px; color: var(--bg-dark); display: flex; align-items: center; gap: 8px; }
+        .logo i { color: var(--primary); }
+        .nav-links a { text-decoration: none; color: var(--text-main); font-weight: 500; font-size: 14px; margin-left: 24px; transition: 0.2s; }
+        .nav-links a:hover { color: var(--primary); }
+
+        /* --- Hero Section --- */
+        .hero { padding: 80px 5%; display: flex; align-items: center; gap: 40px; max-width: 1200px; margin: 0 auto; }
+        .hero-content { flex: 1; }
+        .badge { display: inline-block; background: #dbeafe; color: var(--primary); padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-bottom: 20px; }
+        .hero h1 { font-size: 46px; font-weight: 800; line-height: 1.1; margin-bottom: 20px; color: var(--bg-dark); }
+        .hero p { font-size: 18px; color: var(--text-muted); margin-bottom: 32px; max-width: 500px; }
+        
+        .cta-group { display: flex; gap: 16px; align-items: center; }
+        .btn-primary { background: var(--primary); color: var(--white); padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 16px; transition: 0.2s; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3); }
+        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); }
+        .btn-secondary { color: var(--text-main); text-decoration: none; font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+        .btn-secondary:hover { color: var(--primary); }
+
+        /* Hero Image (Имитация интерфейса) */
+        .hero-image { flex: 1; background: var(--white); border-radius: 12px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); border: 1px solid var(--border); overflow: hidden; }
+        .mock-window { padding: 16px; }
+        .mock-header { display: flex; gap: 6px; margin-bottom: 16px; }
+        .mock-dot { width: 12px; height: 12px; border-radius: 50%; background: #e2e8f0; }
+        .mock-dot:nth-child(1) { background: #ef4444; }
+        .mock-dot:nth-child(2) { background: #f59e0b; }
+        .mock-dot:nth-child(3) { background: #10b981; }
+        .mock-search { background: var(--bg-light); border: 1px solid var(--border); padding: 8px 12px; border-radius: 6px; font-size: 13px; color: var(--text-light); display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+        .mock-list { display: flex; flex-direction: column; gap: 8px; }
+        .mock-item { display: flex; align-items: center; gap: 12px; padding: 8px; border-radius: 6px; background: #f8fafc; border: 1px solid var(--border); }
+        .mock-avatar { width: 24px; height: 24px; border-radius: 50%; background: #cbd5e1; }
+        .mock-text { height: 8px; background: #cbd5e1; border-radius: 4px; width: 60%; }
+        .mock-text.short { width: 30%; }
+
+        /* --- Features --- */
+        .features { padding: 80px 5%; background: var(--white); }
+        .section-title { text-align: center; font-size: 32px; font-weight: 700; margin-bottom: 48px; color: var(--bg-dark); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; max-width: 1200px; margin: 0 auto; }
+        .card { padding: 32px; border: 1px solid var(--border); border-radius: 12px; transition: 0.3s; }
+        .card:hover { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); border-color: var(--primary); }
+        .card-icon { width: 48px; height: 48px; background: #eff6ff; color: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; }
+        .card h3 { font-size: 18px; margin-bottom: 12px; color: var(--bg-dark); }
+        .card p { font-size: 14px; color: var(--text-muted); }
+
+        /* --- Upsell Block (Кросс-сейл на основной продукт) --- */
+        .upsell { padding: 80px 5%; background: var(--bg-dark); color: var(--white); text-align: center; }
+        .upsell-content { max-width: 800px; margin: 0 auto; }
+        .upsell h2 { font-size: 36px; font-weight: 700; margin-bottom: 20px; }
+        .upsell p { font-size: 18px; color: var(--text-light); margin-bottom: 40px; }
+        .upsell .btn-accent { background: var(--accent); color: var(--white); padding: 16px 32px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 18px; transition: 0.2s; display: inline-block; box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.39); }
+        .upsell .btn-accent:hover { background: #059669; transform: translateY(-2px); }
+
+        /* --- Footer --- */
+        footer { background: var(--bg-light); padding: 32px 5%; text-align: center; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 14px; }
+
+        @media (max-width: 768px) {
+            .hero { flex-direction: column; padding: 40px 5%; text-align: center; }
+            .hero h1 { font-size: 32px; }
+            .hero p { margin: 0 auto 24px auto; }
+            .cta-group { justify-content: center; flex-direction: column; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo"><i class="fa-solid fa-bolt"></i> AD Fast Viewer</div>
+        <div class="nav-links">
+            <a href="#features">Возможности</a>
+            <a href="#upsell">Инвентаризация</a>
+            <a href="#" style="color: var(--primary); font-weight: 700;">Скачать бесплатно</a>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="badge">Бесплатная утилита от создателей 10-Страйк</div>
+            <h1>Мгновенный доступ к вашему Active Directory</h1>
+            <p>Легкий и портативный инструмент для просмотра пользователей, групп и подразделений AD. Без установки, без тяжелых оснасток и лишнего ожидания.</p>
+            <div class="cta-group">
+                <a href="#" class="btn-primary"><i class="fa-solid fa-download"></i> Скачать бесплатно</a>
+                <a href="#features" class="btn-secondary">Узнать больше <i class="fa-solid fa-arrow-down"></i></a>
+            </div>
+        </div>
+        
+        <!-- Имитация интерфейса программы -->
+        <div class="hero-image">
+            <div class="mock-window">
+                <div class="mock-header">
+                    <div class="mock-dot"></div><div class="mock-dot"></div><div class="mock-dot"></div>
+                </div>
+                <div class="mock-search"><i class="fa-solid fa-magnifying-glass"></i> Поиск пользователя...</div>
+                <div class="mock-list">
+                    <div class="mock-item"><div class="mock-avatar"></div><div class="mock-text"></div></div>
+                    <div class="mock-item"><div class="mock-avatar"></div><div class="mock-text short"></div></div>
+                    <div class="mock-item"><div class="mock-avatar"></div><div class="mock-text"></div></div>
+                    <div class="mock-item"><div class="mock-avatar"></div><div class="mock-text short"></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <h2 class="section-title">Почему админы выбирают Fast Viewer</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="card-icon"><i class="fa-solid fa-feather"></i></div>
+                <h3>Невесомый и портативный</h3>
+                <p>Не требует установки. Просто запустите .exe файл и получите доступ к каталогу AD за секунды.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fa-solid fa-bolt"></i></div>
+                <h3>Молниеносный поиск</h3>
+                <p>Мгновенно находите пользователей, группы и компьютеры. Больше не нужно ждать загрузки оснастки ADUC.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                <h3>Безопасность</h3>
+                <p>Утилита работает только в режиме чтения. Вы не сможете случайно изменить или удалить запись в каталоге.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="upsell" id="upsell">
+        <div class="upsell-content">
+            <h2>Увидели пользователя в AD? Узнайте, что у него на ПК!</h2>
+            <p>AD Fast Viewer показывает учетные записи, но не видит, какое «железо» и софт установлены на компьютерах пользователей. Для полной картины ИТ-инфраструктуры используйте нашу основную программу.</p>
+            <a href="#" class="btn-accent"><i class="fa-solid fa-desktop"></i> 10-Страйк: Инвентаризация Компьютеров</a>
+        </div>
+    </section>
+
+    <footer>
+        &copy; 2024 10-Страйк. Все права защищены. <br> AD Fast Viewer является бесплатным дополнением к программному обеспечению 10-Страйк.
+    </footer>
+
+</body>
+</html>
